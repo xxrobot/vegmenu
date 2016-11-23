@@ -1,0 +1,453 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<dom-module id="my-view3">
+    <template>
+        <style include="shared-styles">
+        :host {
+            display: block;
+            padding: 0;
+        }
+        
+        .location-logo {
+            box-sizing: border-box;
+            width: 40px;
+            height: 40px;
+            background-color: #ccc;
+        }
+        </style>
+        <div class="card">
+            <h1>About</h1>
+            
+        </div>
+
+    </template>
+    <script>
+    Polymer({
+        is: 'my-view3',
+        ready: function() {
+            this.restaurants = [{
+                location: 'A&W Restaurants',
+                logo: 'AW_Restaurants.png',
+                menu:{
+                  thing: 'Bean Burrito',
+                  thing: 'Taco',
+                  thing: '7 Layer Burrito'
+                }
+            }, {
+                location: 'Amigos/Kings Classic',
+                logo: 'AmigosKings_Classic.png',
+                  menu:[
+                  'Bean Burrito',
+                  'Taco',
+                  '7 Layer Burrito'
+                ]
+            }, {
+                location: 'Arby\'s',
+                logo: 'Arbys.png'
+            }, {
+                location: 'Arctic Circle Restaurants',
+                logo: 'Arctic_Circle_Restaurants.png'
+            }, {
+                location: 'Arthur Treacher\'s',
+                logo: 'Arthur_Treachers.png'
+            }, {
+                location: 'Atlanta Bread Company',
+                logo: 'Atlanta_Bread_Company.png'
+            }, {
+                location: 'Au Bon Pain',
+                logo: 'Au_Bon_Pain.png'
+            }, {
+                location: 'Auntie Anne\'s',
+                logo: 'Auntie_Annes.png'
+            }, {
+                location: 'Baja Fresh',
+                logo: 'Baja_Fresh.png'
+            }, {
+                location: 'Bakers Square',
+                logo: 'Bakers_Square.png'
+            }, {
+                location: 'Blimpies',
+                logo: 'Blimpies.png'
+            }, {
+                location: 'Bojangles\' Famous Chicken \'n Biscuits',
+                logo: 'Bojangles_Famous_Chicken_n_Biscuits.png'
+            }, {
+                location: 'Boston Market',
+                logo: 'Boston_Market.png'
+            }, {
+                location: 'Braum\'s',
+                logo: 'Braums.png'
+            }, {
+                location: 'Burger Chef',
+                logo: 'Burger_Chef.png'
+            }, {
+                location: 'Burger King',
+                logo: 'Burger_King.png'
+            }, {
+                location: 'Burger Street',
+                logo: 'Burger_Street.png'
+            }, {
+                location: 'Burgerville',
+                logo: 'Burgerville.png'
+            }, {
+                location: 'Captain D\'s Seafood Kitchen',
+                logo: 'Captain_Ds_Seafood_Kitchen.png'
+            }, {
+                location: 'Carino\'s Italian Grill',
+                logo: 'Carinos_Italian_Grill.png'
+            }, {
+                location: 'Carl\'s Jr.',
+                logo: 'Carls_Jr.png'
+            }, {
+                location: 'Carrows',
+                logo: 'Carrows.png'
+            }, {
+                location: 'Charley\'s Grilled Subs',
+                logo: 'Charleys_Grilled_Subs.png'
+            }, {
+                location: 'Checkers / Rally\'s',
+                logo: 'Checkers__Rallys.png'
+            }, {
+                location: 'Cheeburger Cheeburger',
+                logo: 'Cheeburger_Cheeburger.png'
+            }, {
+                location: 'Chevys Fresh Mex',
+                logo: 'Chevys_Fresh_Mex.png'
+            }, {
+                location: 'Chicken Express',
+                logo: 'Chicken_Express.png'
+            }, {
+                location: 'Chick-fil-A',
+                logo: 'Chick-fil-A.png'
+            }, {
+                location: 'Chronic Tacos',
+                logo: 'Chronic_Tacos.png'
+            }, {
+                location: 'Chuck-A-Rama',
+                logo: 'Chuck-A-Rama.png'
+            }, {
+                location: 'Church\'s / Texas Chicken',
+                logo: 'Churchs__Texas_Chicken.png'
+            }, {
+                location: 'Cinnabon',
+                logo: 'Cinnabon.png'
+            }, {
+                location: 'Claim Jumper',
+                logo: 'Claim_Jumper.png'
+            }, {
+                location: 'Coco\'s Bakery',
+                logo: 'Cocos_Bakery.png'
+            }, {
+                location: 'Cold Stone Creamery',
+                logo: 'Cold_Stone_Creamery.png'
+            }, {
+                location: 'Cookout',
+                logo: 'Cookout.png'
+            }, {
+                location: 'Copeland\'s',
+                logo: 'Copelands.png'
+            }, {
+                location: 'Country Buffet',
+                logo: 'Country_Buffet.png'
+            }, {
+                location: 'Culver\'s',
+                logo: 'Culvers.png'
+            }, {
+                location: 'Dairy Queen',
+                logo: 'Dairy_Queen.png'
+            }, {
+                location: 'Del Taco',
+                logo: 'Del_Taco.png'
+            }, {
+                location: 'Dixie Chili and Deli',
+                logo: 'Dixie_Chili_and_Deli.png'
+            }, {
+                location: 'Don Pablo\'s',
+                logo: 'Don_Pablos.png'
+            }, {
+                location: 'Druther\'s',
+                logo: 'Druthers.png'
+            }, {
+                location: 'Dunkin\' Donuts',
+                logo: 'Dunkin_Donuts.png'
+            }, {
+                location: 'EatZi\'s',
+                logo: 'EatZis.png'
+            }, {
+                location: 'Eat\'n Park',
+                logo: 'Eatn_Park.png'
+            }, {
+                location: 'Eegee\'s',
+                logo: 'Eegees.png'
+            }, {
+                location: 'El Chico',
+                logo: 'El_Chico.png'
+            }, {
+                location: 'El Pollo Loco',
+                logo: 'El_Pollo_Loco.png'
+            }, {
+                location: 'El Taco Tote',
+                logo: 'El_Taco_Tote.png'
+            }, {
+                location: 'Elephant Bar',
+                logo: 'Elephant_Bar.png'
+            }, {
+                location: 'Elevation Burger',
+                logo: 'Elevation_Burger.png'
+            }, {
+                location: 'Famous Dave\'s',
+                logo: 'Famous_Daves.png'
+            }, {
+                location: 'Farmer Boys',
+                logo: 'Farmer_Boys.png'
+            }, {
+                location: 'Fatburger',
+                logo: 'Fatburger.png'
+            }, {
+                location: 'Firehouse Subs',
+                logo: 'Firehouse_Subs.png'
+            }, {
+                location: 'Five Guys Famous Burgers and Fries',
+                logo: 'Five_Guys_Famous_Burgers_and_Fries.png'
+            }, {
+                location: 'Freddy\'s Frozen Custard & Steakburgers',
+                logo: 'Freddys_Frozen_Custard__Steakburgers.png'
+            }, {
+                location: 'Golden Chick',
+                logo: 'Golden_Chick.png'
+            }, {
+                location: 'Good Times Burgers & Frozen Custard',
+                logo: 'Good_Times_Burgers__Frozen_Custard.png'
+            }, {
+                location: 'Great Steak',
+                logo: 'Great_Steak.png'
+            }, {
+                location: 'Green Burrito / Red Burrito',
+                logo: 'Green_Burrito__Red_Burrito.png'
+            }, {
+                location: 'The Habit Burger Grill',
+                logo: 'The_Habit_Burger_Grill.png'
+            }, {
+                location: 'The Halal Guys',
+                logo: 'The_Halal_Guys.png'
+            }, {
+                location: 'Hardee\'s',
+                logo: 'Hardees.png'
+            }, {
+                location: 'Huddle House',
+                logo: 'Huddle_House.png'
+            }, {
+                location: 'In-N-Out Burger',
+                logo: 'In-N-Out_Burger.png'
+            }, {
+                location: 'Jack in the Box',
+                logo: 'Jack_in_the_Box.png'
+            }, {
+                location: 'Jack\'s',
+                logo: 'Jacks.png'
+            }, {
+                location: 'Jersey Mike\'s Subs',
+                logo: 'Jersey_Mikes_Subs.png'
+            }, {
+                location: 'Jimmy John\'s',
+                logo: 'Jimmy_Johns.png'
+            }, {
+                location: 'Jim\'s Restaurants',
+                logo: 'Jims_Restaurants.png'
+            }, {
+                location: 'Johnny Rockets',
+                logo: 'Johnny_Rockets.png'
+            }, {
+                location: 'Kewpee',
+                logo: 'Kewpee.png'
+            }, {
+                location: 'Krispy Kreme',
+                logo: 'Krispy_Kreme.png'
+            }, {
+                location: 'L&L Hawaiian Barbecue',
+                logo: 'LL_Hawaiian_Barbecue.png'
+            }, {
+                location: 'Lee Roy Selmon\'s',
+                logo: 'Lee_Roy_Selmons.png'
+            }, {
+                location: 'Lee\'s Famous Recipe Chicken',
+                logo: 'Lees_Famous_Recipe_Chicken.png'
+            }, {
+                location: 'Lion\'s Choice',
+                logo: 'Lions_Choice.png'
+            }, {
+                location: 'Long John Silver\'s',
+                logo: 'Long_John_Silvers.png'
+            }, {
+                location: 'Luby\'s',
+                logo: 'Lubys.png'
+            }, {
+                location: 'McDonald\'s',
+                logo: 'McDonalds.png'
+            }, {
+                location: 'Milo\'s Hamburgers',
+                logo: 'Milos_Hamburgers.png'
+            }, {
+                location: 'Moe\'s Southwest Grill',
+                logo: 'Moes_Southwest_Grill.png'
+            }, {
+                location: 'Mr. Hero',
+                logo: 'Mr_Hero.png'
+            }, {
+                location: 'Mrs. Fields',
+                logo: 'Mrs_Fields.png'
+            }, {
+                location: 'Mrs. Winner\'s Chicken & Biscuits',
+                logo: 'Mrs_Winners_Chicken__Biscuits.png'
+            }, {
+                location: 'Naugles',
+                logo: 'Naugles.png'
+            }, {
+                location: 'Panda Express',
+                logo: 'Panda_Express.png'
+            }, {
+                location: 'Penn Station East Coast Subs',
+                logo: 'Penn_Station_East_Coast_Subs.png'
+            }, {
+                location: 'Pita Pit',
+                logo: 'Pita_Pit.png'
+            }, {
+                location: 'Popeyes Chicken & Biscuits',
+                logo: 'Popeyes_Chicken__Biscuits.png'
+            }, {
+                location: 'Port of Subs',
+                logo: 'Port_of_Subs.png'
+            }, {
+                location: 'Potbelly Sandwich Works',
+                logo: 'Potbelly_Sandwich_Works.png'
+            }, {
+                location: 'Quizno\'s Classic Subs',
+                logo: 'Quiznos_Classic_Subs.png'
+            }, {
+                location: 'Raising Cane\'s Chicken Fingers',
+                logo: 'Raising_Canes_Chicken_Fingers.png'
+            }, {
+                location: 'Rax',
+                logo: 'Rax.png'
+            }, {
+                location: 'Robeks',
+                logo: 'Robeks.png'
+            }, {
+                location: 'Roy Rogers Restaurants',
+                logo: 'Roy_Rogers_Restaurants.png'
+            }, {
+                location: 'Runza',
+                logo: 'Runza.png'
+            }, {
+                location: 'Saladworks',
+                logo: 'Saladworks.png'
+            }, {
+                location: 'Sbarro',
+                logo: 'Sbarro.png'
+            }, {
+                location: 'Schlotzsky\'s',
+                logo: 'Schlotzskys.png'
+            }, {
+                location: 'Seattle\'s Best Coffee',
+                logo: 'Seattles_Best_Coffee.png'
+            }, {
+                location: 'Shake Shack',
+                logo: 'Shake_Shack.png'
+            }, {
+                location: 'Skyline Chili',
+                logo: 'Skyline_Chili.png'
+            }, {
+                location: 'Sneaky Pete\'s',
+                logo: 'Sneaky_Petes.png'
+            }, {
+                location: 'Sonic Drive-In',
+                logo: 'Sonic_Drive-In.png'
+            }, {
+                location: 'Spangles',
+                logo: 'Spangles.png'
+            }, {
+                location: 'Steak \'n Shake',
+                logo: 'Steak_n_Shake.png'
+            }, {
+                location: 'Steak Escape',
+                logo: 'Steak_Escape.png'
+            }, {
+                location: 'Stir Crazy',
+                logo: 'Stir_Crazy.png'
+            }, {
+                location: 'Sub Station II',
+                logo: 'Sub_Station_II.png'
+            }, {
+                location: 'Subway',
+                logo: 'Subway.png'
+            }, {
+                location: 'Swensen\'s',
+                logo: 'Swensens.png'
+            }, {
+                location: 'Swensons',
+                logo: 'Swensons.png'
+            }, {
+                location: 'Taco Bell',
+                logo: 'Taco_Bell.png'
+            }, {
+                location: 'Taco Bueno',
+                logo: 'Taco_Bueno.png'
+            }, {
+                location: 'Taco John\'s',
+                logo: 'Taco_Johns.png'
+            }, {
+                location: 'Taco Mayo',
+                logo: 'Taco_Mayo.png'
+            }, {
+                location: 'Taco Tico',
+                logo: 'Taco_Tico.png'
+            }, {
+                location: 'Taco Time',
+                logo: 'Taco_Time.png'
+            }, {
+                location: 'ThunderCloud Subs',
+                logo: 'ThunderCloud_Subs.png'
+            }, {
+                location: 'Twin Peaks',
+                logo: 'Twin_Peaks.png'
+            }, {
+                location: 'Umami Burger',
+                logo: 'Umami_Burger.png'
+            }, {
+                location: 'Wendy\'s',
+                logo: 'Wendys.png'
+            }, {
+                location: 'Wetzel\'s Pretzels',
+                logo: 'Wetzels_Pretzels.png'
+            }, {
+                location: 'Whataburger',
+                logo: 'Whataburger.png'
+            }, {
+                location: 'White Castle',
+                logo: 'White_Castle.png'
+            }, {
+                location: 'Wienerschnitzel',
+                logo: 'Wienerschnitzel.png'
+            }, {
+                location: 'Zaxby\'s',
+                logo: 'Zaxbys.png'
+            }, {
+                location: 'Zero\'s Subs',
+                logo: 'Zeros_Subs.png'
+            }, {
+                location: 'Zippy\'s',
+                logo: 'Zippys.png'
+            }];
+        }
+    });
+    </script>
+</dom-module>

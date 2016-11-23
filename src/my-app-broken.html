@@ -1,0 +1,951 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-elements/paper-elements.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id="my-app">
+    <template>
+        <style>
+        :host {
+            --app-primary-color: #4285f4;
+            --app-secondary-color: black;
+            display: block;
+        }
+        
+        app-header {
+            color: #fff;
+            background-color: var(--app-primary-color);
+        }
+        
+        app-header paper-icon-button {
+            --paper-icon-button-ink-color: white;
+        }
+        
+        .drawer-list {
+            margin: 0 20px;
+        }
+        
+        .drawer-list a {
+            display: block;
+            padding: 0 16px;
+            text-decoration: none;
+            color: var(--app-secondary-color);
+            line-height: 40px;
+        }
+        
+        .drawer-list a.iron-selected {
+            color: black;
+            font-weight: bold;
+        }
+        
+        #search {
+            width: 100%;
+            margin-left: 0;
+        }
+        
+        .footerga {
+            position: fixed;
+            bottom: 0;
+            z-index: 1;
+            width: 100%;
+            background-color: #f7f7f7;
+            text-align: center;
+            height: 62px;
+            padding-top: 8px;
+        }
+        </style>
+        <dom-module id="ls-sample">
+            <iron-localstorage name="lsdata" value="{{lsdata}}" on-iron-localstorage-load-empty="initializeDefaultRestaurants"></iron-localstorage>
+        </dom-module>
+        <app-location route="{{route}}"></app-location>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+        <app-drawer-layout fullbleed>
+            <!-- Drawer content -->
+            <app-drawer align="right">
+                <app-toolbar>Menu</app-toolbar>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                    <a name="view1" href="/">Restaurants</a>
+                    <a name="view2" href="/view2">My Favorites*</a>
+                    <a name="about" href="/about">About/Help</a>
+                </iron-selector>
+            </app-drawer>
+            <!-- Main content -->
+            <app-header-layout has-scrolling-region>
+                <app-header condenses reveals effects="waterfall">
+                    <paper-toolbar class="small">
+                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+                        <div main-title>Vegetarian Fast Food Menus</div>
+                    </paper-toolbar>
+                </app-header>
+
+                <neon-animated-pages class="flex" selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+                    <my-view1 name=""></my-view1>
+                    <my-view2 name="view2"></my-view2>
+                    <my-about name="about"></my-view3>
+
+                    <my-place name="place" route={{subroute}}></my-place>
+                    <my-about name="about"></my-about>
+                    <my-view404 name="view404"></my-view404>
+                </neon-animated-pages>
+                </app-header>
+            </app-header-layout>
+        </app-drawer-layout>
+    </template>
+    <script>
+    var versionNumber = '0.002';
+
+    function migrateFavs() {
+        //console.log("Migrating Favorites");
+
+    };
+    Polymer({
+        is: 'my-app',
+
+        properties: {
+            page: {
+                type: String,
+                reflectToAttribute: true,
+                observer: '_pageChanged'
+            },
+        },
+
+        observers: [
+            '_routePageChanged(routeData.page)'
+        ],
+
+        _routePageChanged: function(page) {
+            this.page = page || 'view1';
+        },
+
+        _pageChanged: function(page) {
+            // Load page import on demand. Show 404 page if fails
+            var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+
+            this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        },
+
+        _showPage404: function() {
+            this.page = 'view404';
+        },
+        initializeDefaultRestaurants: function() {
+            var restaurant = [{
+                    name: 'Taco Bell',
+                    isFav: false,
+                    logo: 'Taco_Bell.png',
+                    menu: [{
+                        item: '7-Layer Burrito',
+                        isFav: false
+                    }, {
+                        item: 'Bean Burrito',
+                        isFav: false
+                    }, {
+                        item: 'Black Bean Burrito',
+                        isFav: false
+                    }, {
+                        item: 'Power Menu Burrito',
+                        isFav: false
+                    }, {
+                        item: 'Power Menu Bowl - Veggie',
+                        isFav: false
+                    }, {
+                        item: 'Cheesy Roll Up',
+                        isFav: false
+                    }, {
+                        item: 'Cheese Quesadilla',
+                        isFav: false
+                    }, {
+                        item: 'Spicy Tostada',
+                        isFav: false
+                    }, {
+                        item: 'Black Beans and Rice',
+                        isFav: false
+                    }, {
+                        item: 'Pintos n Cheese',
+                        isFav: false
+                    }, {
+                        item: 'Triple Layer Nachos',
+                        isFav: false
+                    }, {
+                        item: 'Chips and Cheese',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Arbys',
+                    isFav: false,
+                    logo: 'Arbys.png',
+                    menu: [{
+                        item: 'Chopped Side Salad',
+                        isFav: false
+                    }, {
+                        item: 'Curly Fries',
+                        isFav: false
+                    }, {
+                        item: 'Mozzarella Sticks',
+                        isFav: false
+                    }, {
+                        item: 'Steakhouse Onion Rings',
+                        isFav: false
+                    }, {
+                        item: 'Potato Cakes',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'A&W Restaurants',
+                    isFav: false,
+                    logo: 'AW_Restaurants.png',
+                    menu: [{
+                        item: 'Cheese Curds',
+                        isFav: false
+                    }, {
+                        item: 'Onion Rings',
+                        isFav: false
+                    }, {
+                        item: 'Fries',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Baja Fresh',
+                    isFav: false,
+                    logo: 'Baja_Fresh.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Burger King',
+                    isFav: false,
+                    logo: 'Burger_King.png',
+                    menu: [{
+                        item: 'BK Veggie',
+                        isFav: false
+                    }, {
+                        item: 'French Fries',
+                        isFav: false
+                    }, {
+                        item: 'Onion Rings',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Carl\'s Jr.',
+                    isFav: false,
+                    logo: 'Carls_Jr.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Chick-fil-A',
+                    isFav: false,
+                    logo: 'Chick-fil-A.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Cinnabon',
+                    isFav: false,
+                    logo: 'Cinnabon.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Dairy Queen',
+                    isFav: false,
+                    logo: 'Dairy_Queen.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Del Taco',
+                    isFav: false,
+                    logo: 'Del_Taco.png',
+                    menu: [{
+                        item: '8 Layer Burrito (Veggie Works)',
+                        isFav: false
+                    }, {
+                        item: 'Bean Burrito',
+                        isFav: false
+                    }, {
+                        item: 'Cheese Quesadilla',
+                        isFav: false
+                    }, {
+                        item: 'French Fries',
+                        isFav: false
+                    }, {
+                        item: 'Hash Browns',
+                        isFav: false
+                    }, {
+                        item: 'Chocolate Chip Cookies',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Famous Dave\'s',
+                    isFav: false,
+                    logo: 'Famous_Daves.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Dominos Pizza',
+                    isFav: false,
+                    logo: 'Dominos.png',
+                    menu: [{
+                        item: 'Cheese Pizza',
+                        isFav: false
+                    }, {
+                        item: 'Pacific Veggie',
+                        isFav: false
+                    }, {
+                        item: 'Parmesan Bread Bites',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Farmer Boys',
+                    isFav: false,
+                    logo: 'Farmer_Boys.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Fatburger',
+                    isFav: false,
+                    logo: 'Fatburger.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Firehouse Subs',
+                    isFav: false,
+                    logo: 'Firehouse_Subs.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Five Guys Famous Burgers and Fries',
+                    isFav: false,
+                    logo: 'Five_Guys_Famous_Burgers_and_Fries.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Green Burrito / Red Burrito',
+                    isFav: false,
+                    logo: 'Green_Burrito__Red_Burrito.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'The Habit Burger Grill',
+                    isFav: false,
+                    logo: 'The_Habit_Burger_Grill.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'The Halal Guys',
+                    isFav: false,
+                    logo: 'The_Halal_Guys.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Hardee\'s',
+                    isFav: false,
+                    logo: 'Hardees.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Huddle House',
+                    isFav: false,
+                    logo: 'Huddle_House.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'In-N-Out Burger',
+                    isFav: false,
+                    logo: 'In-N-Out_Burger.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Jack in the Box',
+                    isFav: false,
+                    logo: 'Jack_in_the_Box.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Jersey Mike\'s Subs',
+                    isFav: false,
+                    logo: 'Jersey_Mikes_Subs.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Jimmy John\'s',
+                    isFav: false,
+                    logo: 'Jimmy_Johns.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Johnny Rockets',
+                    isFav: false,
+                    logo: 'Johnny_Rockets.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Krispy Kreme',
+                    isFav: false,
+                    logo: 'Krispy_Kreme.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'L&L Hawaiian Barbecue',
+                    isFav: false,
+                    logo: 'LL_Hawaiian_Barbecue.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Long John Silver\'s',
+                    isFav: false,
+                    logo: 'Long_John_Silvers.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'McDonald\'s',
+                    isFav: false,
+                    logo: 'McDonalds.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Moe\'s Southwest Grill',
+                    isFav: false,
+                    logo: 'Moes_Southwest_Grill.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Panda Express',
+                    isFav: false,
+                    logo: 'Panda_Express.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Pita Pit',
+                    isFav: false,
+                    logo: 'Pita_Pit.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Pizza Hut',
+                    isFav: false,
+                    logo: 'Pizza_Hut.png',
+                    menu: [{
+                        item: 'Cheese Pizza',
+                        isFav: false
+
+                    }, {
+                        item: 'Premium Garden Veggie',
+                        isFav: false
+                    }, {
+                        item: 'Veggie Lovers',
+                        isFav: false
+                    }, {
+                        item: 'Ultimate Cheese Lovers',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Popeyes Chicken & Biscuits',
+                    isFav: false,
+                    logo: 'Popeyes_Chicken__Biscuits.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Port of Subs',
+                    isFav: false,
+                    logo: 'Port_of_Subs.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Potbelly Sandwich Works',
+                    isFav: false,
+                    logo: 'Potbelly_Sandwich_Works.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Quizno\'s Classic Subs',
+                    isFav: false,
+                    logo: 'Quiznos_Classic_Subs.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Sbarro',
+                    isFav: false,
+                    logo: 'Sbarro.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Schlotzsky\'s',
+                    isFav: false,
+                    logo: 'Schlotzskys.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Sonic Drive-In',
+                    isFav: false,
+                    logo: 'Sonic_Drive-In.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Steak \'n Shake',
+                    isFav: false,
+                    logo: 'Steak_n_Shake.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Subway',
+                    isFav: false,
+                    logo: 'Subway.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Taco Bell',
+                    isFav: false,
+                    logo: 'Taco_Bell.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Twin Peaks',
+                    isFav: false,
+                    logo: 'Twin_Peaks.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Umami Burger',
+                    isFav: false,
+                    logo: 'Umami_Burger.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Wendy\'s',
+                    isFav: false,
+                    logo: 'Wendys.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Wetzel\'s Pretzels',
+                    isFav: false,
+                    logo: 'Wetzels_Pretzels.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Whataburger',
+                    isFav: false,
+                    logo: 'Whataburger.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'White Castle',
+                    isFav: false,
+                    logo: 'White_Castle.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Wienerschnitzel',
+                    isFav: false,
+                    logo: 'Wienerschnitzel.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }, {
+                    name: 'Zippy\'s',
+                    isFav: false,
+                    logo: 'Zippys.png',
+                    menu: [{
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }, {
+                        item: 'menuItem',
+                        isFav: false
+                    }]
+                }
+
+            ];
+
+            // Put the object into storage
+            localStorage.setItem('lsdata', JSON.stringify(restaurant));
+            console.log("Pushed default lsdata ");
+
+            localStorage.setItem('clientVersion', versionNumber);
+            console.log("Pushed Version Number");
+
+        }
+    });
+    </script>
+</dom-module>
