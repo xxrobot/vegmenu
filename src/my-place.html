@@ -21,73 +21,70 @@ This page will accept a placename and look up data from local storage data (lsda
         <app-route route="{{route}}" pattern="/:name" data="{{routeData}}"></app-route>
         <h1>{{routeData.name}}</h1>
         <iron-localstorage name="lsdata" value="{{lsdata}}" on-iron-localstorage-load-empty="initializeDefaultRestaurants"></iron-localstorage>
-
-<paper-listbox>
-    <template is="dom-repeat" items="{{lsdata}}" as="restaurant" filter="{{computeFilter(routeData.name)}}">
-        <template is="dom-repeat" items="{{restaurant.menu}}" as="menu">
-            <a class="paper-item-link" on-click="toggleFav" tabindex="-1">
-                <paper-icon-item>
-                    {{menu.item}}
-                    <button class="favButton" item-icon>
-                        <!-- Label start -->
-                        <template is="dom-if" if="{{menu.isFav}}">
-                            <paper-icon-button icon="favorite" alt="favourite this!">
-                            </paper-icon-button>
-                        </template>
-                        <template is="dom-if" if="{{!menu.isFav}}">
-                            <paper-icon-button icon="favorite-border" alt="favourite this!">
-                            </paper-icon-button>
-                        </template>
-                        <!-- label end -->
-                    </button>
-                </paper-icon-item>
-        </template>
-        </a>
+        <paper-listbox>
+            <template is="dom-repeat" items="{{lsdata}}" as="restaurant" filter="{{computeFilter(routeData.name)}}">
+                <template is="dom-repeat" items="{{restaurant.menu}}" as="menu">
+                    <a class="paper-item-link" on-click="toggleFav" tabindex="-1">
+                        <paper-icon-item>
+                            {{menu.item}}
+                            <button class="favButton" item-icon>
+                                <!-- Label start -->
+                                <template is="dom-if" if="{{menu.isFav}}">
+                                    <paper-icon-button icon="favorite" alt="favourite this!">
+                                    </paper-icon-button>
+                                </template>
+                                <template is="dom-if" if="{{!menu.isFav}}">
+                                    <paper-icon-button icon="favorite-border" alt="favourite this!">
+                                    </paper-icon-button>
+                                </template>
+                                <!-- label end -->
+                            </button>
+                        </paper-icon-item>
+                    </a>
+                </template>
+            </template>
+        </paper-listbox>
     </template>
-    </template>
-</paper-listbox>
-<script>
-Polymer({
-    is: 'my-place',
-    properties: {
-        lsdata: {
-            type: Object
+    <script>
+    Polymer({
+        is: 'my-place',
+        properties: {
+            lsdata: {
+                type: Object
+            }
+        },
+        toggleFav: function(e) {
+            var model = e.model;
+            var isFavValue = model.get('menu.isFav');
+
+            if (isFavValue == true) {
+                model.set('menu.isFav', false);
+            } else {
+                model.set('menu.isFav', true);
+            }
+        },
+        computeFilter: function(string) {
+            if (!string) {
+                // set filter to null to disable filtering
+                return null;
+            } else {
+                // return a filter function for the current search string
+                string = string.toLowerCase();
+                return function(employee) {
+                    var first = employee.name.toLowerCase();
+                    var last = employee.name.toLowerCase();
+                    return (first.indexOf(string) != -1 ||
+                        last.indexOf(string) != -1);
+                };
+            }
+        },
+        ready: function() {
+
+            // Retrieve the object from storage
+            retrievedObject = localStorage.getItem('lsdata');
+
+            console.log('retrievedObject: ', JSON.parse(retrievedObject));
         }
-    },
-    toggleFav: function(e) {
-        var model = e.model;
-        var isFavValue = model.get('menu.isFav');
-
-        if (isFavValue == true) {
-            model.set('menu.isFav', false);
-        } else {
-            model.set('menu.isFav', true);
-        }
-    },
-    computeFilter: function(string) {
-        if (!string) {
-            // set filter to null to disable filtering
-            return null;
-        } else {
-            // return a filter function for the current search string
-            string = string.toLowerCase();
-            return function(employee) {
-                var first = employee.name.toLowerCase();
-                var last = employee.name.toLowerCase();
-                return (first.indexOf(string) != -1 ||
-                    last.indexOf(string) != -1);
-            };
-        }
-    },
-
-    ready: function() {
-
-        // Retrieve the object from storage
-        retrievedObject = localStorage.getItem('lsdata');
-
-        console.log('retrievedObject: ', JSON.parse(retrievedObject));
-
-    },
-});
-</script>
+    });
+    </script>
 </dom-module>
