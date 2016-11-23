@@ -17,13 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             padding: 0;
         }
         
-        .location-logo {
-            box-sizing: border-box;
-            width: 40px;
-            height: 40px;
-            background-color: #ccc;
-        }
-        
         paper-item-body a {
             text-decoration: none;
             color: rgba(0, 0, 0, 0.58);
@@ -52,6 +45,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-size: 14px;
             color: rgba(0, 0, 0, .58);
         }
+        
+        ul.menuItem {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+        
+        ul.menuItem li {
+            display: inline;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        ul.menuItem li:after {
+            content: ", ";
+        }
+        
+        ul.menuItem li:nth-last-child(2):after {
+            content: ' ';
+        }
         </style>
         <div class="searchContainer">
             <input value="{{searchString::input}}" type="text" id="search" placeholder="Search Restaurants">
@@ -71,9 +85,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <div>{{restaurant.name}}
                             </div>
                             <div class="menuPreview">
-                                <template is="dom-repeat" items="{{restaurant.menu}}" as="menu">
-                                    {{menu.item}},
-                                </template>
+                                <ul class='menuItem'>
+                                    <template is="dom-repeat" items="{{restaurant.menu}}" as="menu">
+                                        <li>{{menu.item}}</li>
+                                    </template>
+                                </ul>
                             </div>
                         </a>
                     </paper-item-body>
@@ -81,11 +97,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <button class="favButton" item-icon>
                             <!-- Label start -->
                             <template is="dom-if" if="{{restaurant.isFav}}">
-                                <paper-icon-button icon="favorite" alt="favourite this!" style="color: rgba(0,0,0,.54);">
+                                <paper-icon-button icon="favorite" alt="Favorite this">
                                 </paper-icon-button>
                             </template>
                             <template is="dom-if" if="{{!restaurant.isFav}}">
-                                <paper-icon-button icon="favorite-border" alt="favourite this!" style="color: rgba(0,0,0,.54);">
+                                <paper-icon-button icon="favorite-border" alt="Unfavorite">
                                 </paper-icon-button>
                             </template>
                             <!-- label end -->
