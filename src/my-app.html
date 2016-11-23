@@ -29,7 +29,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-
 <dom-module id="my-app">
     <template>
         <style>
@@ -69,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             width: 100%;
             margin-left: 0;
         }
-
+        
         .footerga {
             position: fixed;
             bottom: 0;
@@ -97,7 +96,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </iron-selector>
             </app-drawer>
             <!-- Main content -->
-
             <app-header-layout has-scrolling-region>
                 <app-header condenses reveals effects="waterfall">
                     <paper-toolbar class="small">
@@ -105,17 +103,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <div main-title>Vegetarian Fast Food Menus</div>
                     </paper-toolbar>
                 </app-header>
-
-
-
                 <neon-animated-pages class="flex" selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-                   <my-view1 name=""></my-view1>
+                    <my-view1 name=""></my-view1>
                     <my-view2 name="view2"></my-view2>
                     <my-place name="place" route={{subroute}}></my-place>
+                    <my-about name="about"></my-about>
+
                     <my-new-view name="new-view"></my-new-view>
                     <my-view404 name="view404"></my-view404>
                 </neon-animated-pages>
-
                 </app-header>
             </app-header-layout>
         </app-drawer-layout>
@@ -237,13 +233,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Baja_Fresh.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Grilled Veggie Burrito',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Guacamole & Chips',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Side Salad',
+                        isFav: false
+                    }, {
+                        item: 'Churro',
                         isFav: false
                     }]
                 }, {
@@ -261,14 +260,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         isFav: false
                     }]
                 }, {
+                    name: 'Capriottis',
+                    isFav: false,
+                    logo: 'Capriottis.png',
+                    menu: [{
+                        item: 'Veggie Turkey',
+                        isFav: false
+                    }, {
+                        item: 'Veggie Cheesesteak',
+                        isFav: false
+                    }, {
+                        item: 'Veggie Burger',
+                        isFav: false
+                    }]
+                }, {
                     name: 'Carl\'s Jr.',
                     isFav: false,
                     logo: 'Carls_Jr.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Veg It. Guacamole Thickburger',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Fried Zuccini',
                         isFav: false
                     }, {
                         item: 'menuItem',
@@ -279,27 +292,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Chick-fil-A.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Waffle Fries',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Fruit Cup',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Superfood Side',
                         isFav: false
                     }]
                 }, {
-                    name: 'Cinnabon',
+                    name: 'Chipotle',
                     isFav: false,
-                    logo: 'Cinnabon.png',
+                    logo: 'Chipotle.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Sofritas Burrito/Taco/Bowl',
                         isFav: false
                     }, {
-                        item: 'menuItem',
-                        isFav: false
-                    }, {
-                        item: 'menuItem',
+                        item: 'Cheese Quesadilla',
                         isFav: false
                     }]
                 }, {
@@ -361,10 +371,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         item: 'Cheese Pizza',
                         isFav: false
                     }, {
-                        item: 'Pacific Veggie',
+                        item: 'Pacific Veggie Pizza',
                         isFav: false
                     }, {
                         item: 'Parmesan Bread Bites',
+                        isFav: false
+                    }, {
+                        item: 'Mediterranean Veggie Sandwich',
+                        isFav: false
+                    }, {
+                        item: 'Pasta Primavera',
                         isFav: false
                     }]
                 }, {
@@ -470,13 +486,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Hardees.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Side Salad',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Grits',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Texas Toast',
                         isFav: false
                     }]
                 }, {
@@ -498,10 +514,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'In-N-Out_Burger.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Grilled Cheese (Contains Animal Rennet)',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Animal Style Fries',
                         isFav: false
                     }, {
                         item: 'menuItem',
@@ -564,6 +580,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         isFav: false
                     }]
                 }, {
+                    name: 'Nacho Daddy',
+                    isFav: false,
+                    logo: 'Nacho_daddy.png',
+                    menu: [{
+                        item: 'Veggie Nachos',
+                        isFav: false
+                    }, {
+                        item: 'Veggie Burrito',
+                        isFav: false
+                    }, {
+                        item: 'Veggie Tacos',
+                        isFav: false
+                    }]
+                }, {
                     name: 'Krispy Kreme',
                     isFav: false,
                     logo: 'Krispy_Kreme.png',
@@ -582,7 +612,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'LL_Hawaiian_Barbecue.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Garden Burger',
                         isFav: false
                     }, {
                         item: 'menuItem',
@@ -638,13 +668,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Panda_Express.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Chow Mein',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Fried Rice',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Eggplant Tofu',
+                        isFav: false
+                    }, {
+                        item: 'Eggrolls',
+                        isFav: false
+                    }, {
+                        item: 'Steamed Veggies',
+                        isFav: false
+                    }, {
+                        item: 'White/Brown Rice',
                         isFav: false
                     }]
                 }, {
@@ -768,10 +807,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Sonic_Drive-In.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Tater Tots',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'French Fries',
                         isFav: false
                     }, {
                         item: 'menuItem',
@@ -796,27 +835,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Subway.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Veggie Delight',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Veggie Patty',
                         isFav: false
                     }, {
-                        item: 'menuItem',
-                        isFav: false
-                    }]
-                }, {
-                    name: 'Taco Bell',
-                    isFav: false,
-                    logo: 'Taco_Bell.png',
-                    menu: [{
-                        item: 'menuItem',
-                        isFav: false
-                    }, {
-                        item: 'menuItem',
-                        isFav: false
-                    }, {
-                        item: 'menuItem',
+                        item: 'Pizza',
                         isFav: false
                     }]
                 }, {
@@ -852,10 +877,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     isFav: false,
                     logo: 'Wendys.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Fries',
                         isFav: false
                     }, {
-                        item: 'menuItem',
+                        item: 'Frosty',
                         isFav: false
                     }, {
                         item: 'menuItem',
@@ -918,11 +943,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         isFav: false
                     }]
                 }, {
+                    name: 'Yard House',
+                    isFav: false,
+                    logo: 'Yard_House.png',
+                    menu: [{
+                        item: 'GARDEIN™ [MAC + CHEESE]²',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Spicy Thai Chicken Pizza',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Grilled Chicken & Avocado Sandwich',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ BBQ Chicekn Pizza',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Chicken Rice Bowl',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Fried Chicken Strips',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Buffalo Wings',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Firecracker Wings',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Jerk Wings',
+                        isFav: false
+                    }, {
+                        item: 'Vegan Burger',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Blacked Chicken Torta',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ BBQ Chicekn Salad',
+                        isFav: false
+                    }, {
+                        item: 'GARDEIN™ Orange Peel Chicken',
+                        isFav: false
+                    }]
+                }, {
                     name: 'Zippy\'s',
                     isFav: false,
                     logo: 'Zippys.png',
                     menu: [{
-                        item: 'menuItem',
+                        item: 'Vegetarian Chili',
                         isFav: false
                     }, {
                         item: 'menuItem',
