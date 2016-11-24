@@ -16,6 +16,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             display: block;
             padding: 0;
         }
+
+        paper-toolbar{background-color: red;}
         
         paper-item-body a {
             text-decoration: none;
@@ -32,7 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         .searchContainer {
             width: 100%;
-            background-color: #3f51b5;
+            background-color: #00bcd4;
             display: flex;
         }
         
@@ -67,10 +69,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             content: ' ';
         }
         </style>
+
         <div class="searchContainer">
             <input value="{{searchString::input}}" type="text" id="search" placeholder="Search Restaurants">
         </div>
         <h1>Restaurants</h1>
+
         <dom-module id="ls-sample">
             <iron-localstorage name="lsdata" value="{{lsdata}}"></iron-localstorage>
         </dom-module>
@@ -120,10 +124,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         },
         ready: function() {
-
             // Retrieve the object from storage
-            var retrievedObject = localStorage.getItem('lsdata');
-            console.log('retrievedObject: ', JSON.parse(retrievedObject));
+            // var retrievedObject = localStorage.getItem('lsdata');
+            // console.log('retrievedObject: ', JSON.parse(retrievedObject));
 
             //warns if client data is old
             var clientVersion = localStorage.getItem('clientVersion');

@@ -20,6 +20,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-elements/paper-elements.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+
+
+
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
@@ -29,6 +34,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
 <dom-module id="my-app">
     <template>
         <style>
@@ -80,6 +86,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             padding-top: 8px;
         }
         </style>
+
+
+        <style is="custom-style">
+          paper-toolbar {
+            --paper-toolbar-background: #00bcd4; /* changes the background to blue*/
+          }
+
+            paper-dialog.colored {
+            border-radius:2px;
+            background-color: #4caf50;
+            color: #fff;
+            text-align: center;
+          }
+        </style>  
+
+        <paper-dialog id="welcomeDialog" class="colored" withBackdrop="true">
+          <h2>Only the good stuff!</h2>
+          <img src="../images/Veg_menu.svg" style="width: 200px; height: 256px;">
+          <p>My Veg Menu shows you fast food menus <b>without the meat</b> items. Save your favorites here for easy ordering.
+          </p>
+           <div class="buttons">
+            <paper-button dialog-confirm autofocus style="
+            background-color: #ff5722;
+            color: #fff;
+            width: 100%;">GOT IT!</paper-button>
+          </div>
+        </paper-dialog>
+
+
         <dom-module id="ls-sample">
             <iron-localstorage name="lsdata" value="{{lsdata}}" on-iron-localstorage-load-empty="initializeDefaultRestaurants"></iron-localstorage>
         </dom-module>
@@ -90,17 +125,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <app-drawer align="right">
                 <app-toolbar>Menu</app-toolbar>
                 <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    <a name="view1" href="/">Restaurants</a>
-                    <a name="favorites" href="/favorites">My Favorites*</a>
-                    <a name="about" href="/about">About/Help</a>
+                    <a name="view1" href="/" drawer-toggle>Restaurants</a>
+                    <a name="favorites" href="/favorites" drawer-toggle>My Favorites</a>
+                    <a name="about" href="/about" drawer-toggle>About/Help</a>
                 </iron-selector>
             </app-drawer>
             <!-- Main content -->
             <app-header-layout has-scrolling-region>
                 <app-header condenses reveals effects="waterfall">
                     <paper-toolbar class="small">
-                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-                        <div main-title>Vegetarian Fast Food Menus</div>
+                        <span class="title" style="margin-left:0; font-size: 12pt;">Vegetarian Fast Food Menus</span>
+
+                        <paper-icon-button icon="menu" horizontal-align="right" drawer-toggle style="margin-right: 0; float:right;"></paper-icon-button>
+
                     </paper-toolbar>
                 </app-header>
                 <neon-animated-pages class="flex" selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
@@ -132,6 +169,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
         },
 
+        ready: function() {
+            //be ready
+       },
+
         observers: [
             '_routePageChanged(routeData.page)'
         ],
@@ -151,6 +192,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.page = 'view404';
         },
         initializeDefaultRestaurants: function() {
+             //Show welcome modal cause this is their first time here.
+            this.$.welcomeDialog.toggle();
+
+
+
             var restaurant = [{
                     name: 'Taco Bell',
                     isFav: false,
